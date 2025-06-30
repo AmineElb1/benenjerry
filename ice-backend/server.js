@@ -1,13 +1,12 @@
 // server.js
 
+require('dotenv').config() 
+
 const express = require('express')
 const mongoose = require('mongoose')
-const dotenv = require('dotenv')
 const cors = require('cors')
 
 const orderRoutes = require('./routes/orderRoutes')
-
-dotenv.config()
 
 const app = express()
 
@@ -15,21 +14,19 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// API Routes
+// Routes
 app.use('/api/orders', orderRoutes)
 
-// Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('✅ Verbonden met MongoDB')
-  const PORT = process.env.PORT || 5000
-  app.listen(PORT, () => {
-    console.log(`🚀 Server draait op poort ${PORT}`)
+console.log('MONGO_URI =', process.env.MONGO_URI)
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('✅ Verbonden met MongoDB')
+    const PORT = process.env.PORT || 5000
+    app.listen(PORT, () => {
+      console.log(` Server draait op poort ${PORT}`)
+    })
   })
-})
-.catch(err => {
-  console.error('❌ MongoDB connectie faalde:', err.message)
-})
+  .catch(err => {
+    console.error('❌ MongoDB connectie faalde:', err.message)
+  })
