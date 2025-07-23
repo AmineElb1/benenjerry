@@ -14,6 +14,7 @@
       @select-topping="setTopping"
       @reset="resetSelection"
     />
+    <!-- selectie-overzichtsbalk verwijderd -->
   </div>
 </template>
 
@@ -34,6 +35,7 @@ const mainFlavors = [
   { name: 'Bubblegum', color: '#c77dff' },
   { name: 'Karamel', color: '#d4a76a' },
   { name: 'Mint', color: '#7fffd4' },
+  { name: 'Smurfen', color: '#0099ff' } // nieuwe smaak
 ]
 
 const toppings = [
@@ -42,6 +44,7 @@ const toppings = [
   { name: 'Noten', color: '#8b4513', type: 'nuts' },
   { name: 'Fruit', color: '#ff4500', type: 'fruit' },
   { name: 'Slagroom', color: '#ffffff', type: 'cream' },
+  { name: 'Geen', color: null, none: true }
 ]
 
 function setFlavor(flavor) {
@@ -56,6 +59,10 @@ function setFlavor(flavor) {
 }
 
 function setTopping(topping) {
+  if (topping && topping.none) {
+    selectedTopping.value = null
+    return
+  }
   if (selectedTopping.value && selectedTopping.value.name === topping.name) {
     selectedTopping.value = null // deselect
   } else {
@@ -84,5 +91,17 @@ function resetSelection() {
   .ice-cream-customizer {
     flex-direction: column;
   }
+}
+/* selectie-overzichtsbalk verwijderd */
+.summary-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: 1rem;
+  color: #222;
+  font-weight: 600;
+  min-width: 60px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 </style>

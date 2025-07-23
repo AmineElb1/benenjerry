@@ -27,12 +27,13 @@
             v-for="topping in toppings"
             :key="topping.name"
             :flavor="topping"
-            :active="selectedTopping && selectedTopping.name === topping.name"
+            :active="selectedTopping ? selectedTopping.name === topping.name : topping.none"
             @click="$emit('select-topping', topping)"
+            :class="{ 'flavor-none': topping.none }"
           />
         </div>
       </div>
-      
+      <!-- keuze-overzicht verwijderd -->
       <div class="button-row">
         <button class="reset-button" @click="$emit('reset')">
           <span>Opnieuw beginnen</span>
@@ -41,6 +42,7 @@
           <span>Bestellen</span>
         </button>
       </div>
+      <!-- selectie-overzichtsbalk verwijderd -->
     </div>
   </template>
   
@@ -65,6 +67,8 @@
     background: white;
     box-shadow: -5px 0 15px rgba(0,0,0,0.05);
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
   .logo-container {
     text-align: center;
@@ -95,6 +99,9 @@
   
   .flavor-section {
     margin-bottom: 1.1rem;
+  }
+  .flavor-section:last-of-type {
+    margin-bottom: 0.5rem;
   }
   
   .section-title {
@@ -136,7 +143,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
-    margin-top: 1.2rem;
+    margin-top: 0.5rem;
     align-items: center;
   }
   .reset-button, .order-button {
@@ -172,6 +179,43 @@
     transform: translateY(-2px);
   }
   
+  /* keuze-overzicht verwijderd */
+  .selection-summary-panel {
+    margin: 1.2rem 0 0.5rem 0;
+    background: rgba(255,255,255,0.97);
+    border: 1px solid #e0e0e0;
+    border-radius: 1.2rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    padding: 0.7rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    font-size: 1.1rem;
+  }
+  .summary-badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.8rem;
+    border-radius: 1rem;
+    color: #222;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  
+  .flavor-button.flavor-none {
+    background: #eee;
+    color: #888;
+    border: 1.5px dashed #bbb;
+    font-weight: bold;
+    position: relative;
+  }
+  .flavor-button.flavor-none.active {
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px #bbb;
+    color: #222;
+  }
+  
   @media (max-width: 1024px) {
     .controls-panel {
       width: 40%;
@@ -202,5 +246,9 @@
     .flavor-grid {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+  /* selectie-overzichtsbalk verwijderd */
+  .sticky-buttons {
+    /* sticky/fixed verwijderd */
   }
   </style>
