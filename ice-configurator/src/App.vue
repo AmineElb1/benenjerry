@@ -1,7 +1,11 @@
 <template>
-  <IceCustomizer />
+  <router-view />
 </template>
 
 <script setup>
-import IceCustomizer from './components/IceCustomizer/IceCustomizer.vue'
+// Geen extra imports nodig
 </script>
+
+<style scoped>
+/* Geen extra styles nodig */
+</style>

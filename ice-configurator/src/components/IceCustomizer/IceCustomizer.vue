@@ -16,7 +16,7 @@
       @order="showOrderForm = true"
     />
     
-    <!-- Bestelformulier -->
+    
     <div v-if="showOrderForm && !orderSuccess" class="order-form-overlay">
       <form class="order-form" @submit.prevent="submitOrder">
         <div class="order-form-logo">
@@ -41,12 +41,12 @@
           </div>
         </div>
         <div class="order-form-actions">
-          <button type="submit" class="btn-primary">Bestelling plaatsen</button>
           <button type="button" class="btn-secondary" @click="showOrderForm = false">Annuleren</button>
+          <button type="submit" class="btn-primary">Bestelling plaatsen</button>
         </div>
       </form>
     </div>
-    <!-- Bevestiging -->
+    
     <div v-if="orderSuccess" class="order-confirmation">
       <h2>Bedankt voor je bestelling!</h2>
       <p>Je bestellingsnummer is: <b>{{ orderId }}</b></p>
@@ -119,12 +119,12 @@ function resetSelection() {
 }
 
 function validateEmail(email) {
-  // Simpele e-mail validatie
+ 
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
 async function submitOrder() {
-  // Reset errors
+  
   errors.value = { name: false, address: false, email: false }
   let valid = true
   if (!customer.value.name.trim()) {
@@ -141,7 +141,7 @@ async function submitOrder() {
   }
   if (!valid) return
 
-  // Bouw order object
+  
   const order = {
     name: customer.value.name,
     address: customer.value.address,
