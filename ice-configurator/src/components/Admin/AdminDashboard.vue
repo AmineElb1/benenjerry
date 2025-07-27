@@ -12,18 +12,14 @@
           <thead>
             <tr>
               <th>Naam</th>
-              <th>Adres</th>
               <th>Smaak</th>
               <th>Topping</th>
               <th>Status</th>
-              <th>Datum</th>
-              <th>Acties</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="order in orders" :key="order._id">
               <td>{{ order.name }}</td>
-              <td>{{ order.address }}</td>
               <td>{{ order.flavor }}</td>
               <td>{{ order.topping }}</td>
               <td>
@@ -33,14 +29,25 @@
                   <option value="geannuleerd">Geannuleerd</option>
                 </select>
               </td>
-              <td>{{ new Date(order.createdAt).toLocaleString() }}</td>
               <td>
-                <button @click="deleteOrder(order._id)" class="delete-btn">Verwijderen</button>
+                <button @click="goToDetail(order._id)" class="details-btn">Details</button>
+              </td>
+              <td>
+                <button @click="openDeleteModal(order)" class="delete-btn">Verwijderen</button>
               </td>
             </tr>
           </tbody>
         </table>
         <div v-else class="no-orders">Geen bestellingen gevonden.</div>
+      </div>
+      <div v-if="showDeleteModal" class="modal-overlay">
+        <div class="modal">
+          <h3>Weet je zeker dat je deze bestelling wilt verwijderen?</h3>
+          <div class="modal-actions">
+            <button class="btn-secondary" @click="closeDeleteModal">Annuleren</button>
+            <button class="btn-danger" @click="confirmDelete">Verwijderen</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -52,6 +59,8 @@ const router = useRouter()
 
 const orders = ref([])
 const loading = ref(true)
+const showDeleteModal = ref(false)
+const orderToDelete = ref(null)
 
 async function fetchOrders() {
   loading.value = true
@@ -64,19 +73,28 @@ async function fetchOrders() {
   loading.value = false
 }
 
-async function deleteOrder(id) {
-  if (!confirm('Weet je zeker dat je deze bestelling wilt verwijderen?')) return
+function openDeleteModal(order) {
+  orderToDelete.value = order
+  showDeleteModal.value = true
+}
+function closeDeleteModal() {
+  orderToDelete.value = null
+  showDeleteModal.value = false
+}
+async function confirmDelete() {
+  if (!orderToDelete.value) return
   try {
-    await fetch(`http://localhost:5000/api/orders/${id}`, { method: 'DELETE' })
-    orders.value = orders.value.filter(o => o._id !== id)
+    await fetch(`http://localhost:5000/api/orders/${orderToDelete.value._id}`, { method: 'DELETE' })
+    orders.value = orders.value.filter(o => o._id !== orderToDelete.value._id)
   } catch (e) {
     alert('Verwijderen mislukt')
   }
+  closeDeleteModal()
 }
 
 async function updateStatus(order) {
   try {
-    await fetch(`http://localhost:5000/api/orders/${order._id}`, {
+    await fetch(`http://localhost:5000/api/orders/${order._id}/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: order.status })
@@ -89,7 +107,9 @@ async function updateStatus(order) {
 function logout() {
   router.push('/admin')
 }
-
+function goToDetail(id) {
+  router.push(`/admin/orders/${id}`)
+}
 onMounted(fetchOrders)
 </script>
 <style scoped>
@@ -207,6 +227,7 @@ input, select, textarea {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
+  margin-left: 0.7rem;
 }
 .delete-btn:hover {
   background: #ff6b81;
@@ -220,6 +241,80 @@ input, select, textarea {
   margin-top: 2rem;
   font-size: 1.1rem;
   color: #888;
+}
+.details-btn {
+  background: #2ecc40;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 0.4rem 1.1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.details-btn:hover {
+  background: #27ae38;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal {
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+  padding: 2rem 2.2rem 1.5rem 2.2rem;
+  min-width: 280px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.modal h3 {
+  margin-bottom: 1.2rem;
+  font-size: 1.15rem;
+  color: #2d2d2d;
+  text-align: center;
+}
+.modal-actions {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 0.5rem;
+}
+.btn-danger {
+  background: #ff4757;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(46,204,64,0.08);
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-danger:hover {
+  background: #ff6b81;
+}
+.btn-secondary {
+  background: #fff;
+  color: #2ecc40;
+  border: 2px solid #2ecc40;
+  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  background: #2ecc40;
+  color: #fff;
 }
 @media (max-width: 600px) {
   .admin-dashboard-header {
