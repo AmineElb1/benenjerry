@@ -5,7 +5,7 @@
   <script setup>
   import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
   import * as THREE from 'three'
-  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
   import { gsap } from 'gsap'
   import { TextureLoader } from 'three'
   
@@ -58,7 +58,7 @@
     renderer.setSize(sceneContainer.value.clientWidth, sceneContainer.value.clientHeight)
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
-    renderer.outputEncoding = THREE.sRGBEncoding
+    renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.2
     sceneContainer.value.appendChild(renderer.domElement)
@@ -99,7 +99,7 @@
   
   function loadModel() {
     const loader = new GLTFLoader()
-    loader.load('/src/assets/models/IceCream.glb', (gltf) => {
+    loader.load('/IceCream.glb', (gltf) => {
       const model = gltf.scene
       model.scale.set(2, 2, 2)
       model.position.set(0, -0.5, 0)
