@@ -33,7 +33,7 @@ const loading = ref(true)
 async function fetchOrder() {
   loading.value = true
   try {
-    const res = await fetch(`http://localhost:5000/api/orders/${route.params.id}`)
+    const res = await fetch(`https://benenjerry.onrender.com/api/orders/${route.params.id}`)
     if (res.ok) {
       order.value = await res.json()
     } else {

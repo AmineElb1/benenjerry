@@ -65,7 +65,7 @@ const orderToDelete = ref(null)
 async function fetchOrders() {
   loading.value = true
   try {
-    const res = await fetch('http://localhost:5000/api/orders')
+    const res = await fetch('https://benenjerry.onrender.com/api/orders')
     orders.value = await res.json()
   } catch (e) {
     alert('Kan bestellingen niet ophalen')
@@ -84,7 +84,7 @@ function closeDeleteModal() {
 async function confirmDelete() {
   if (!orderToDelete.value) return
   try {
-    await fetch(`http://localhost:5000/api/orders/${orderToDelete.value._id}`, { method: 'DELETE' })
+    await fetch(`https://benenjerry.onrender.com/api/orders/${orderToDelete.value._id}`, { method: 'DELETE' })
     orders.value = orders.value.filter(o => o._id !== orderToDelete.value._id)
   } catch (e) {
     alert('Verwijderen mislukt')
@@ -94,7 +94,7 @@ async function confirmDelete() {
 
 async function updateStatus(order) {
   try {
-    await fetch(`http://localhost:5000/api/orders/${order._id}/status`, {
+    await fetch(`https://benenjerry.onrender.com/api/orders/${order._id}/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: order.status })
