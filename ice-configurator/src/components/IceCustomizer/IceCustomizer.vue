@@ -48,6 +48,12 @@
     </div>
     
     <div v-if="orderSuccess" class="order-confirmation">
+      <div class="checkmark-container">
+        <svg class="checkmark" viewBox="0 0 52 52">
+          <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+          <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16"/>
+        </svg>
+      </div>
       <h2>Bedankt voor je bestelling!</h2>
       <p>Je bestellingsnummer is: <b>{{ orderId }}</b></p>
       <button @click="resetOrder">Nieuwe bestelling</button>
@@ -150,7 +156,7 @@ async function submitOrder() {
     email: customer.value.email
   }
   try {
-    const res = await fetch('http://localhost:5000/api/orders', {
+    const res = await fetch('https://benenjerry.onrender.com/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
@@ -258,30 +264,34 @@ function resetOrder() {
 }
 .order-form-group label {
   font-weight: 600;
-  color: #2d2d2d;
+  color: #1a1a1a;
   margin-bottom: 0.1rem;
 }
 .order-form-group input {
   padding: 0.5rem 0.8rem;
   border-radius: 7px;
-  border: 1.5px solid #cce3f6;
+  border: 1.5px solid #b0b8c1;
   font-size: 1rem;
-  background: #f7fbff;
-  transition: border-color 0.2s;
+  background: #fff;
+  color: #222;
+  transition: border-color 0.2s, background 0.2s;
 }
 .order-form-group input:focus {
-  border-color: #6ec6f7;
+  border-color: #2ecc40;
+  background: #f7fbff;
   outline: none;
 }
 .order-form-group input.error {
-  border-color: #ff6b81;
+  border-color: #ff4757;
   background: #fff0f3;
+  color: #b00020;
 }
 .form-error {
-  color: #ff4757;
-  font-size: 0.92em;
+  color: #b00020;
+  font-size: 1em;
   margin-top: 0.1rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 .order-form-actions {
   display: flex;
@@ -349,9 +359,52 @@ function resetOrder() {
   justify-content: center;
   z-index: 1000;
   flex-direction: column;
+  text-align: center;
 }
 .order-confirmation h2 {
   margin-bottom: 1rem;
+  font-size: 2.1rem;
+  color: #2ecc40;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.order-confirmation p {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+.checkmark-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+.checkmark {
+  width: 80px;
+  height: 80px;
+  display: block;
+}
+.checkmark-circle {
+  stroke: #2ecc40;
+  stroke-width: 4;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-linecap: round;
+  animation: strokeCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.checkmark-check {
+  stroke: #2ecc40;
+  stroke-width: 4;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-linecap: round;
+  animation: strokeCheck 0.4s 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+@keyframes strokeCircle {
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes strokeCheck {
+  100% { stroke-dashoffset: 0; }
 }
 .order-confirmation button {
   margin-top: 1.5rem;
